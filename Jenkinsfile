@@ -1,33 +1,23 @@
 pipeline {
     agent any
     environment{
-        set -e
-        DOCKER_IMAGE = "lbg"
+                DOCKER_IMAGE = "lbg"
         VERSION = "1.3"
         PORT = "8000"
     }
     stages {
-        stage('Prep'){
-            steps {
-                sh '''
-                chmod +x setup.sh
-                ./setup.sh
-                cleanup
-                '''
-            }
-        }
+      
         stage('Build') {
             steps {
-                sh "./setup.sh"
-                sh "cleanup"
-                sh "build_docker"
+                sh '''
+                 docker build -t $DOCKER_IMAGE:$VERSION .
+                '''
            }
         }
          stage('Deploy') {
             steps {
                 sh '''
-                ./setup.sh
-                run_docker
+                docker run  -d -p 80:$PORT -e PORT=$PORT $DOCKER_IMAGE:$VERSION
                 '''
                 }
         }   
