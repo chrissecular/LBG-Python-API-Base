@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-export DOCKER_IMAGE=lbg
-export VERSION=1.1
-
 cleanup () {
     docker stop $(docker ps -q) || true
     docker rm $(docker ps -aq) || true
@@ -20,8 +17,3 @@ modify_app () {
 run_docker (){
     docker run  -d -p 80:$PORT -e PORT=$PORT $DOCKER_IMAGE:$VERSION 
 }
-
-cleanup
-build_docker
-modify_app
-run_docker
