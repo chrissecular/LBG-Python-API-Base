@@ -6,7 +6,15 @@ pipeline {
         PORT = "8000"
     }
     stages {
-      
+        stage('prep'){
+            steps{
+                sh '''
+                docker stop $(docker ps -q) || true
+                docker rm $(docker ps -aq) || true
+                docker rmi $(docker images -q) || true
+                '''
+            }
+        }
         stage('Build') {
             steps {
                 sh '''
